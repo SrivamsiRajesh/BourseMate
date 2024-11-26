@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Stock Price Prediction</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+    }
+    input, button {
+      padding: 10px;
+      margin: 10px 0;
+      font-size: 16px;
+    }
+    .result {
+      margin-top: 20px;
+      font-size: 18px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Stock Price Prediction</h1>
+  <p>Enter a stock symbol to predict the next day's closing price:</p>
+  <input type="text" id="symbol" placeholder="e.g., AAPL">
+  <button onclick="getPrediction()">Predict</button>
+  <div class="result" id="result"></div>
+
+  <script>
+    async function getPrediction() {
+      const symbol = document.getElementById("symbol").value.trim();
+      const resultDiv = document.getElementById("result");
+
+      if (!symbol) {
+        resultDiv.innerHTML = "<span style='color: red;'>Please enter a stock symbol.</span>";
+        return;
+      }
+
+      try {
+        const response = await fetch("/predict", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ symbol })
+        });
+        const data = await response.json();
+        if (data.error) {
+          resultDiv.innerHTML = `<span style='color: red;'>Error: ${data.error}</span>`;
+        } else {
+          resultDiv.innerHTML = `<strong>Predicted Price for ${symbol.toUpperCase()}: $${data.predicted_price}</strong>`;
+        }
+      } catch (error) {
+        resultDiv.innerHTML = "<span style='color: red;'>An error occurred. Please try again.</span>";
+      }
+    }
+  </script>
+</body>
+</html>

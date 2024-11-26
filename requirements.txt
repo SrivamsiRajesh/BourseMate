@@ -1,0 +1,7 @@
+fastapi
+uvicorn
+polygon-api-client
+pandas
+numpy
+scikit-learn
+tensorflow
